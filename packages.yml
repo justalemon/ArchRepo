@@ -1,0 +1,16 @@
+packages:
+  # Dependencies
+  - maliit-framework # Requirement for maliit-keyboard
+  - presage # Requirement for maliit-keyboard
+  - python-yattag # Dependency for chirp-next
+
+  # Explicit Packages
+  - pacvis-git # Visualizer of pacman packages
+  - qdirstat # Disk usage utility
+  - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile
+  - plasma-settings # KDE Plasma Mobile Settings
+  - plasma-mobile-sounds # Sounds for Plasma Mobile
+  - plasma-mobile # Plasma Mobile itself
+  - maliit-keyboard # On Screen Keyboard for KDE Plasma Mobile
+  - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
+  - chirp-next # Transceiver Programmer

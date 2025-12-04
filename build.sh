@@ -7,4 +7,4 @@ cd build || exit 1
 makepkg -sf --noconfirm
 rm -rf ~/pkg
 mkdir ~/pkg
-cp -v *.{pkg.tar.zst,tar.gz} ~/pkg
+cp -v *.{pkg.tar.zst} ~/pkg

@@ -5,7 +5,7 @@ import docker
 import typer
 import yaml
 from colorama import Fore, Style
-from docker.errors import ImageNotFound
+from docker.errors import ImageNotFound, APIError
 
 
 def get_list_of_packages():
@@ -30,7 +30,22 @@ def main(build: bool = False):
 
     for package in get_list_of_packages():
         print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
-        docker_client.containers.run(image, f"/home/builder/build.sh {package}", True)
+
+        try:
+            container = docker_client.containers.run(image, f"/home/builder/build.sh {package}", name=f"archbuilder-{package}", detach=True)
+        except APIError as e:
+            sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
+
+        def is_container_running():
+            container.reload()
+            return container.status == "running" or container.status == "created"
+
+        while is_container_running():
+            logs = container.logs(stdout=True, stderr=True, stream=True)
+            for log in logs:
+                print(log.decode("utf-8").strip("\n"))
+                if not is_container_running():
+                    break
 
 
 if __name__ == "__main__":

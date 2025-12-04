@@ -3,6 +3,8 @@ packages:
   - maliit-framework # Requirement for maliit-keyboard
   - presage # Requirement for maliit-keyboard
   - python-yattag # Dependency for chirp-next
+  - airspyhf-git # Dependency for sdrpp-brown
+  - libsdrplay # Dependency for sdrpp-brown
 
   # Explicit Packages
   - pacvis-git # Visualizer of pacman packages
@@ -14,3 +16,4 @@ packages:
   - maliit-keyboard # On Screen Keyboard for KDE Plasma Mobile
   - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
   - chirp-next # Transceiver Programmer
+  - sdrpp-brown-git # Software Defined Radio Front End

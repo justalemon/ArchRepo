@@ -13,9 +13,20 @@ packages:
   - plasma-settings # KDE Plasma Mobile Settings
   - plasma-mobile-sounds # Sounds for Plasma Mobile
   - plasma-mobile # Plasma Mobile itself
-  - maliit-keyboard # On Screen Keyboard for KDE Plasma Mobile
+  - package: maliit-keyboard # On Screen Keyboard for KDE Plasma Mobile
+    dependencies:
+      - maliit-framework
+      - presage
   - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
-  - chirp-next # Transceiver Programmer
-  - sdrpp-git # Software Defined Radio Front End - Stock Version
+  - package: chirp-next # Transceiver Programmer
+    dependencies:
+      - python-yattag
+  - package: sdrpp-git # Software Defined Radio Front End - Stock Version
+    dependencies:
+      - airspyhf-git
+      - libsdrplay
   - sdrpp-headers-git # Software Defined Radio Front End - Headers for Stock Version
-  - sdrpp-brown-git # Software Defined Radio Front End - Brown Version
+  - package: sdrpp-brown-git # Software Defined Radio Front End - Brown Version
+    dependencies:
+      - airspyhf-git
+      - libsdrplay

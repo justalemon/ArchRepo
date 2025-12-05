@@ -28,7 +28,18 @@ def main(build: bool = False):
         except ImageNotFound:
             sys.exit("Could not find archbuilder image, use --build to build it.")
 
-    for package in get_list_of_packages():
+    for package_info in get_list_of_packages():
+        if isinstance(package_info, dict):
+            package = package_info["package"]
+            dependencies = package_info["dependencies"]
+        elif isinstance(package_info, str):
+            package = package_info
+            dependencies = []
+        else:
+            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Skipping package {Fore.MAGENTA}{package_info}{Fore.WHITE} "
+                  f"because its not a dict or string{Style.RESET_ALL}")
+            continue
+
         print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
 
         packages_dir = Path.cwd() / ".repo" / package
@@ -40,9 +51,17 @@ def main(build: bool = False):
             },
         }
 
+        for dependency in dependencies:
+            dep_dir = Path.cwd() / ".repo" / dependency
+            volumes[str(dep_dir)] = {
+                "bind": f"/home/builder/deps/{dependency}",
+            }
+
+        params = f"{package} {' '.join(dependencies)}"
+
         try:
-            container = docker_client.containers.run(image, f"/home/builder/build.sh {package}", name=f"archbuilder-{package}",
-                                                     detach=True, volumes=volumes)
+            container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
+                                                     name=f"archbuilder-{package}", detach=True, volumes=volumes)
         except APIError as e:
             sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
 

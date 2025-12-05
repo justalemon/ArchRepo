@@ -55,6 +55,7 @@ def main(build: bool = False):
             dep_dir = Path.cwd() / ".repo" / dependency
             volumes[str(dep_dir)] = {
                 "bind": f"/home/builder/deps/{dependency}",
+                "mode": "ro",
             }
 
         params = f"{package} {' '.join(dependencies)}"

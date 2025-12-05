@@ -5,7 +5,7 @@ import docker
 import typer
 import yaml
 from colorama import Fore, Style
-from docker.errors import ImageNotFound, APIError
+from docker.errors import ImageNotFound, APIError, NotFound
 
 
 def get_list_of_packages():
@@ -58,10 +58,18 @@ def main(build: bool = False):
             }
 
         params = f"{package} {' '.join(dependencies)}"
+        name = f"archbuilder-{package}"
+
+        try:
+            docker_client.containers.get(name).remove(force=True)
+            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}{name}{Fore.WHITE}"
+                  f" for package {Fore.MAGENTA}{package_info}{Fore.WHITE}{Style.RESET_ALL}")
+        except NotFound:
+            pass
 
         try:
             container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
-                                                     name=f"archbuilder-{package}", detach=True, volumes=volumes)
+                                                     name=name, detach=True, volumes=volumes)
         except APIError as e:
             sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
 

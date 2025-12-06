@@ -9,6 +9,7 @@ packages:
   - python-torchaudio # Dependency for freedv-gui
   - python-sounddevice # Dependency for freedata-server
   - hamradio-menus # Dependency for fldigi
+  - cty # Dependency for fldigi
 
   # Explicit Packages
   - pacvis-git # Visualizer of pacman packages
@@ -48,3 +49,4 @@ packages:
   - package: fldigi # Digital tools for Amateur Radio
     dependencies:
       - hamradio-menus
+      - fldigi

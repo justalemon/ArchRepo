@@ -40,7 +40,7 @@ packages:
       - qt5-websockets
   - js8call # Tools for using JS8 for Amateur Radio
   - package: freedv-gui # Tools for using Digital Audio in HF for Amateur Radio
-  - dependencies:
+    dependencies:
       - python-torchaudio
   - package: freedata-server # Tools for HF Communication for Amateur Radio
     dependencies:

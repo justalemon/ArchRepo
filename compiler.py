@@ -15,7 +15,28 @@ def get_list_of_packages():
     return parsed["packages"]
 
 
-def main(build: bool = False):
+def get_package_details(package_name):
+    path = Path.cwd() / "packages.yml"
+    contents = path.read_text(encoding="utf-8")
+    parsed = yaml.load(contents, Loader=yaml.Loader)
+
+    for package in parsed["packages"]:
+        if isinstance(package, dict):
+            name = package["package"]
+            dependencies = package["dependencies"]
+        elif isinstance(package, str):
+            name = package
+            dependencies = []
+        else:
+            continue
+
+        if name == package_name:
+            return [*dependencies, package]
+
+    return []
+
+
+def main(build: bool = False, package: str = None):
     docker_client = docker.from_env()
 
     if build:
@@ -28,7 +49,9 @@ def main(build: bool = False):
         except ImageNotFound:
             sys.exit("Could not find archbuilder image, use --build to build it.")
 
-    for package_info in get_list_of_packages():
+    packages = get_package_details(package) if package else get_list_of_packages()
+
+    for package_info in packages:
         if isinstance(package_info, dict):
             package = package_info["package"]
             dependencies = package_info["dependencies"]

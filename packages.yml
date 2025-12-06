@@ -50,3 +50,4 @@ packages:
     dependencies:
       - hamradio-menus
       - fldigi
+  - gridtracker2 # Multi Tool App for Amateur Radio

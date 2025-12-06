@@ -6,6 +6,7 @@ packages:
   - airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
   - libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
   - qt5-websockets # Dependency for wsjtx-improved
+  - python-torchaudio # Dependency for freedv-gui
 
   # Explicit Packages
   - pacvis-git # Visualizer of pacman packages
@@ -35,3 +36,6 @@ packages:
     dependencies:
       - qt5-websockets
   - js8call # Tools for using JS8 for Amateur Radio
+  - package: freedv-gui # Tools for using Digital Audio in HF for Amateur Radio
+  - dependencies:
+      - python-torchaudio

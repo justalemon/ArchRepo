@@ -43,3 +43,4 @@ packages:
   - package: freedata-server # Tools for HF Communication for Amateur Radio
     dependencies:
       - python-sounddevice
+  - direwolf # TNC/APRS Software for Amateeur Radio

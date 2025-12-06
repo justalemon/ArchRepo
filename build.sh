@@ -14,4 +14,4 @@ cd build || exit 1
 makepkg -sf --noconfirm
 mkdir ~/pkg || true
 cp -v *.pkg.tar.zst ~/pkg
-cp -v *.tar.gz ~/pkg
+cp -v *.tar.gz ~/pkg || true

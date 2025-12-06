@@ -5,6 +5,7 @@ packages:
   - python-yattag # Dependency for chirp-next
   - airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
   - libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
+  - qt5-websockets # Dependency for wsjtx-improved
 
   # Explicit Packages
   - pacvis-git # Visualizer of pacman packages
@@ -30,3 +31,6 @@ packages:
     dependencies:
       - airspyhf-git
       - libsdrplay
+  - package: wsjtx-improved # Tools for using JT9 and JT65 for Amateur Radio
+    dependencies:
+      - qt5-websockets

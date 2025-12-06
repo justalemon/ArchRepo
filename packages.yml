@@ -34,3 +34,4 @@ packages:
   - package: wsjtx-improved # Tools for using JT9 and JT65 for Amateur Radio
     dependencies:
       - qt5-websockets
+  - js8call # Tools for using JS8 for Amateur Radio

@@ -5,7 +5,7 @@ import docker
 import typer
 import yaml
 from colorama import Fore, Style
-from docker.errors import ImageNotFound, APIError, NotFound
+from docker.errors import ImageNotFound, APIError, NotFound, DockerException
 
 
 def get_list_of_packages():
@@ -37,7 +37,11 @@ def get_package_details(package_name):
 
 
 def main(build: bool = False, package: str = None):
-    docker_client = docker.from_env()
+    try:
+        docker_client = docker.from_env()
+    except DockerException as e:
+        print(f"Unable to connect to Docker: {e}", file=sys.stderr)
+        sys.exit(1)
 
     if build:
         print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder{Fore.WHITE}, please wait...{Style.RESET_ALL}")

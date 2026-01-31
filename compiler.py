@@ -38,7 +38,7 @@ def get_package_details(package_name):
     return []
 
 
-def build_package(docker_client: DockerClient, image: Image, package_info: dict | str):
+def build_package(docker_client: DockerClient, image: Image, package_info: dict | str, print_logs: bool = True):
     if isinstance(package_info, dict):
         package = package_info["package"]
         dependencies = package_info["dependencies"]
@@ -89,6 +89,9 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
         return container.status == "running" or container.status == "created"
 
     while is_container_running():
+        if not print_logs:
+            continue
+
         logs = container.logs(stdout=True, stderr=True, stream=True)
         for log in logs:
             print(log.decode("utf-8").strip("\n"))
@@ -96,7 +99,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
                 break
 
 
-def main(build: bool = False, package: str = None):
+def main(build: bool = False, package: str = None, print_logs: bool = False):
     try:
         docker_client = docker.from_env()
     except DockerException as e:
@@ -116,7 +119,7 @@ def main(build: bool = False, package: str = None):
     packages = get_package_details(package) if package else get_list_of_packages()
 
     for package_info in packages:
-        build_package(docker_client, image, package_info)
+        build_package(docker_client, image, package_info, print_logs)
 
 
 if __name__ == "__main__":

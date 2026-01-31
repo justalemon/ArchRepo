@@ -5,6 +5,8 @@ import docker
 import typer
 import yaml
 from colorama import Fore, Style
+from docker import DockerClient
+from docker.models.images import Image
 from docker.errors import ImageNotFound, APIError, NotFound, DockerException
 
 
@@ -36,6 +38,64 @@ def get_package_details(package_name):
     return []
 
 
+def build_package(docker_client: DockerClient, image: Image, package_info: dict | str):
+    if isinstance(package_info, dict):
+        package = package_info["package"]
+        dependencies = package_info["dependencies"]
+    elif isinstance(package_info, str):
+        package = package_info
+        dependencies = []
+    else:
+        print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Skipping package {Fore.MAGENTA}{package_info}{Fore.WHITE} "
+              f"because its not a dict or string{Style.RESET_ALL}")
+        return
+
+    print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
+
+    packages_dir = Path.cwd() / ".repo" / package
+    packages_dir.mkdir(parents=True, exist_ok=True)
+
+    volumes = {
+        str(packages_dir): {
+            "bind": "/home/builder/pkg",
+        },
+    }
+
+    for dependency in dependencies:
+        dep_dir = Path.cwd() / ".repo" / dependency
+        volumes[str(dep_dir)] = {
+            "bind": f"/home/builder/deps/{dependency}",
+            "mode": "ro",
+        }
+
+    params = f"{package} {' '.join(dependencies)}"
+    name = f"archbuilder-{package}"
+
+    try:
+        docker_client.containers.get(name).remove(force=True)
+        print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}{name}{Fore.WHITE}"
+              f" for package {Fore.MAGENTA}{package_info}{Fore.WHITE}{Style.RESET_ALL}")
+    except NotFound:
+        pass
+
+    try:
+        container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
+                                                 name=name, detach=True, volumes=volumes)
+    except APIError as e:
+        sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
+
+    def is_container_running():
+        container.reload()
+        return container.status == "running" or container.status == "created"
+
+    while is_container_running():
+        logs = container.logs(stdout=True, stderr=True, stream=True)
+        for log in logs:
+            print(log.decode("utf-8").strip("\n"))
+            if not is_container_running():
+                break
+
+
 def main(build: bool = False, package: str = None):
     try:
         docker_client = docker.from_env()
@@ -56,61 +116,7 @@ def main(build: bool = False, package: str = None):
     packages = get_package_details(package) if package else get_list_of_packages()
 
     for package_info in packages:
-        if isinstance(package_info, dict):
-            package = package_info["package"]
-            dependencies = package_info["dependencies"]
-        elif isinstance(package_info, str):
-            package = package_info
-            dependencies = []
-        else:
-            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Skipping package {Fore.MAGENTA}{package_info}{Fore.WHITE} "
-                  f"because its not a dict or string{Style.RESET_ALL}")
-            continue
-
-        print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
-
-        packages_dir = Path.cwd() / ".repo" / package
-        packages_dir.mkdir(parents=True, exist_ok=True)
-
-        volumes = {
-            str(packages_dir): {
-                "bind": "/home/builder/pkg",
-            },
-        }
-
-        for dependency in dependencies:
-            dep_dir = Path.cwd() / ".repo" / dependency
-            volumes[str(dep_dir)] = {
-                "bind": f"/home/builder/deps/{dependency}",
-                "mode": "ro",
-            }
-
-        params = f"{package} {' '.join(dependencies)}"
-        name = f"archbuilder-{package}"
-
-        try:
-            docker_client.containers.get(name).remove(force=True)
-            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}{name}{Fore.WHITE}"
-                  f" for package {Fore.MAGENTA}{package_info}{Fore.WHITE}{Style.RESET_ALL}")
-        except NotFound:
-            pass
-
-        try:
-            container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
-                                                     name=name, detach=True, volumes=volumes)
-        except APIError as e:
-            sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
-
-        def is_container_running():
-            container.reload()
-            return container.status == "running" or container.status == "created"
-
-        while is_container_running():
-            logs = container.logs(stdout=True, stderr=True, stream=True)
-            for log in logs:
-                print(log.decode("utf-8").strip("\n"))
-                if not is_container_running():
-                    break
+        build_package(docker_client, image, package_info)
 
 
 if __name__ == "__main__":

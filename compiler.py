@@ -88,13 +88,17 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
         container.reload()
         return container.status == "running" or container.status == "created"
 
-    while is_container_running():
-        if not print_logs:
-            continue
+    buffer = []
 
+    while is_container_running():
         logs = container.logs(stdout=True, stderr=True, stream=True)
         for log in logs:
-            print(log.decode("utf-8").strip("\n"))
+            msg = log.decode("utf-8").strip("\n")
+            buffer.append(msg)
+
+            if print_logs:
+                print(msg)
+
             if not is_container_running():
                 break
 

@@ -102,6 +102,16 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
             if not is_container_running():
                 break
 
+    waited = container.wait()
+    status_code = waited["StatusCode"]
+
+    if status_code != 0:
+        print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Unable to build package {Fore.MAGENTA}{package}{Fore.WHITE} "
+              f"({status_code}) {Style.RESET_ALL}")
+    else:
+        print(f"{Fore.WHITE}Successfully built package {Fore.MAGENTA}{package}{Fore.WHITE}"
+              f"{Style.RESET_ALL}")
+
 
 def main(build: bool = False, package: str = None, print_logs: bool = False):
     try:

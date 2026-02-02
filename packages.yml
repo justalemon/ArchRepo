@@ -34,7 +34,9 @@ packages:
     dependencies:
       - airspyhf-git
       - libsdrplay
-  - sdrpp-headers-git # Software Defined Radio Front End - Headers for Stock Version
+  - package: sdrpp-headers-git # Software Defined Radio Front End - Headers for Stock Version
+    dependencies:
+      - sdrpp-git
   - package: sdrpp-brown-git # Software Defined Radio Front End - Brown Version
     dependencies:
       - airspyhf-git

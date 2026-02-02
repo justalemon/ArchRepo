@@ -4,6 +4,8 @@ set -e
 package=$1
 shift
 
+sudo pacman -Syu
+
 for dep in "$@"; do
     sudo pacman -U ~/deps/$dep/*.pkg.tar.zst --noconfirm
 done

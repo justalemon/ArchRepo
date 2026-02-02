@@ -23,8 +23,9 @@ packages:
       - presage
   - package: plasma-mobile # Plasma Mobile itself
     dependencies:
-      - plasma-nano
+      - maliit-framework
       - maliit-keyboard
+      - plasma-nano
       - plasma-settings
   - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
   - package: chirp-next # Transceiver Programmer

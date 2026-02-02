@@ -112,6 +112,9 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
         print(f"{Fore.WHITE}Successfully built package {Fore.MAGENTA}{package}{Fore.WHITE}"
               f"{Style.RESET_ALL}")
 
+    log_file = packages_dir / "build.log"
+    log_file.write_text("\n".join(buffer), encoding="utf-8")
+
 
 def main(build: bool = False, package: str = None, print_logs: bool = False):
     try:

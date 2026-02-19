@@ -23,6 +23,7 @@ packages:
       - presage
   - package: plasma-mobile # Plasma Mobile itself
     dependencies:
+      - presage
       - maliit-framework
       - maliit-keyboard
       - plasma-nano

@@ -111,6 +111,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
     else:
         print(f"{Fore.WHITE}Successfully built package {Fore.MAGENTA}{package}{Fore.WHITE}"
               f"{Style.RESET_ALL}")
+        container.remove()
 
     log_file = packages_dir / "build.log"
     log_file.write_text("\n".join(buffer), encoding="utf-8")

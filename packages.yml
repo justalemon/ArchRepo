@@ -10,6 +10,7 @@ packages:
   - python-sounddevice # Dependency for freedata-server
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
+  - flxmlrpc # Dependency for fldigi
   - qt5-charts # Dependency for sdrangel-git
   - qt5-gamepad # Dependency for sdrangel-git
   - qt5-webengine # Dependency for sdrangel-git
@@ -60,6 +61,8 @@ packages:
   - direwolf # TNC/APRS Software for Amateur Radio
   - package: fldigi # Digital tools for Amateur Radio
     dependencies:
+      - cty
+      - flxmlrpc
       - hamradio-menus
   - gridtracker2 # Multi Tool App for Amateur Radio
   - package: sdrangel-git

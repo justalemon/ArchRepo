@@ -11,9 +11,12 @@ packages:
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
   - flxmlrpc # Dependency for fldigi
+  - qt5-webchannel # Dependency for qt5-webengine
   - qt5-charts # Dependency for sdrangel-git
   - qt5-gamepad # Dependency for sdrangel-git
-  - qt5-webengine # Dependency for sdrangel-git
+  - package: qt5-webengine # Dependency for sdrangel-git
+    dependencies:
+      - qt5-webchannel
   - log4cpp # Dependency for sdrangel-git
 
   # Explicit Packages

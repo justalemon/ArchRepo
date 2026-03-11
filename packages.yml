@@ -5,11 +5,15 @@ packages:
   - python-yattag # Dependency for chirp-next
   - airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
   - libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
-  - qt5-websockets # Dependency for wsjtx-improved
+  - qt5-websockets # Dependency for wsjtx-improved and sdrangel-git
   - python-torchaudio # Dependency for freedv-gui
   - python-sounddevice # Dependency for freedata-server
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
+  - qt5-charts # Dependency for sdrangel-git
+  - qt5-gamepad # Dependency for sdrangel-git
+  - qt5-webengine # Dependency for sdrangel-git
+  - log4cpp # Dependency for sdrangel-git
 
   # Explicit Packages
   - pacvis-git # Visualizer of pacman packages
@@ -58,3 +62,10 @@ packages:
     dependencies:
       - hamradio-menus
   - gridtracker2 # Multi Tool App for Amateur Radio
+  - package: sdrangel-git
+    dependencies:
+      - qt5-charts
+      - qt5-gamepad
+      - qt5-websockets
+      - qt5-webengine
+      - log4cpp

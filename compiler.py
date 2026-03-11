@@ -141,7 +141,8 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
         try:
             build_package(docker_client, image, package_info, print_logs)
         except pywintypes.error as e:
-            sys.exit(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e.winerror} @ {e.funcname}: {e.strerror})")
+            print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e.winerror} @ {e.funcname}: {e.strerror})")
+            input("Press enter to continue...")
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 import docker
+import pywintypes
 import typer
 import yaml
 from colorama import Fore, Style
@@ -137,7 +138,10 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
     packages = get_package_details(package) if package else get_list_of_packages()
 
     for package_info in packages:
-        build_package(docker_client, image, package_info, print_logs)
+        try:
+            build_package(docker_client, image, package_info, print_logs)
+        except pywintypes.error as e:
+            sys.exit(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e.winerror} @ {e.funcname}: {e.strerror})")
 
 
 if __name__ == "__main__":

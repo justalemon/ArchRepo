@@ -20,6 +20,8 @@ packages:
   - log4cpp # Dependency for sdrangel-git
 
   # Explicit Packages
+  - paru
+  - brave-bin
   - pacvis-git # Visualizer of pacman packages
   - qdirstat # Disk usage utility
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile

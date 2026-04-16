@@ -33,7 +33,9 @@ def get_list_of_packages():
         elif isinstance(package, str):
             pkgs.append({"package": package})
         else:
-            print("Invalid package:", package, file=sys.stderr)
+
+            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "
+                  f"because its not a dict or string{Style.RESET_ALL}")
     return pkgs
 
 
@@ -59,16 +61,8 @@ def get_package_details(package_name):
 
 
 def build_package(docker_client: DockerClient, image: Image, package_info: dict | str, print_logs: bool = True):
-    if isinstance(package_info, dict):
-        package = package_info["package"]
-        dependencies = package_info["dependencies"]
-    elif isinstance(package_info, str):
-        package = package_info
-        dependencies = []
-    else:
-        print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Skipping package {Fore.MAGENTA}{package_info}{Fore.WHITE} "
-              f"because its not a dict or string{Style.RESET_ALL}")
-        return
+    package = package_info["package"]
+    dependencies = package_info["dependencies"]
 
     print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
 
@@ -162,7 +156,10 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
 
     for package_info in packages:
         try:
-            build_package(docker_client, image, package_info, print_logs)
+            success = build_package(docker_client, image, package_info, print_logs)
+
+            if success:
+                completed.append(package_info["package"])
         except Exception as e:
             print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e})")
             input("Press enter to continue...")

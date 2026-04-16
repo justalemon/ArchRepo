@@ -1,7 +1,5 @@
 packages:
   # Dependencies
-  - maliit-framework # Requirement for maliit-keyboard
-  - presage # Requirement for maliit-keyboard
   - python-yattag # Dependency for chirp-next
   - airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
   - libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
@@ -11,13 +9,13 @@ packages:
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
   - flxmlrpc # Dependency for fldigi
-  - qt5-webchannel # Dependency for qt5-webengine
-  - qt5-charts # Dependency for sdrangel-git
-  - qt5-gamepad # Dependency for sdrangel-git
+  # - qt5-webchannel # Dependency for qt5-webengine
+  # - qt5-charts # Dependency for sdrangel-git
+  # - qt5-gamepad # Dependency for sdrangel-git
   # - package: qt5-webengine # Dependency for sdrangel-git BORKED
   #  dependencies:
   #    - qt5-webchannel
-  - log4cpp # Dependency for sdrangel-git
+  # - log4cpp # Dependency for sdrangel-git
 
   # Explicit Packages
   - paru
@@ -27,15 +25,8 @@ packages:
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile
   - plasma-settings # KDE Plasma Mobile Settings
   - plasma-mobile-sounds # Sounds for Plasma Mobile
-  - package: maliit-keyboard # On Screen Keyboard for KDE Plasma Mobile
-    dependencies:
-      - maliit-framework
-      - presage
   - package: plasma-mobile # Plasma Mobile itself
     dependencies:
-      - presage
-      - maliit-framework
-      - maliit-keyboard
       - plasma-nano
       - plasma-settings
   - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module

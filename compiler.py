@@ -94,7 +94,8 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
         container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
                                                  name=name, detach=True, volumes=volumes)
     except APIError as e:
-        sys.exit(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
+        print(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
+        return False
 
     def is_container_running():
         container.reload()
@@ -127,6 +128,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
 
     log_file = packages_dir / "build.log"
     log_file.write_text("\n".join(buffer), encoding="utf-8")
+    return status_code == 0
 
 
 def main(build: bool = False, package: str = None, print_logs: bool = False):
@@ -136,8 +138,7 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
     try:
         docker_client = docker.from_env()
     except DockerException as e:
-        print(f"Unable to connect to Docker: {e}", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(f"Unable to connect to Docker: {e}")
 
     if build:
         print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder{Fore.WHITE}, please wait...{Style.RESET_ALL}")

@@ -9,13 +9,6 @@ packages:
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
   - flxmlrpc # Dependency for fldigi
-  # - qt5-webchannel # Dependency for qt5-webengine
-  # - qt5-charts # Dependency for sdrangel-git
-  # - qt5-gamepad # Dependency for sdrangel-git
-  # - package: qt5-webengine # Dependency for sdrangel-git BORKED
-  #  dependencies:
-  #    - qt5-webchannel
-  # - log4cpp # Dependency for sdrangel-git
 
   # Explicit Packages
   - paru
@@ -62,10 +55,3 @@ packages:
       - flxmlrpc
       - hamradio-menus
   - gridtracker2 # Multi Tool App for Amateur Radio
-  #- package: sdrangel-git
-  #  dependencies:
-  #    - qt5-charts
-  #    - qt5-gamepad
-  #    - qt5-websockets
-  #    - qt5-webengine
-  #    - log4cpp

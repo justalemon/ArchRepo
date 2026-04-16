@@ -1,3 +1,5 @@
+import os
+import platform
 import sys
 from pathlib import Path
 
@@ -8,6 +10,16 @@ from colorama import Fore, Style
 from docker import DockerClient
 from docker.models.images import Image
 from docker.errors import ImageNotFound, APIError, NotFound, DockerException
+
+
+def get_architecture():
+    if hasattr(os, "uname"):
+        return os.uname().machine
+    else:
+        return "x86_64" if platform.uname().machine == "AMD64" else None
+
+
+ARCH = get_architecture()
 
 
 def get_list_of_packages():
@@ -118,6 +130,9 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
 
 
 def main(build: bool = False, package: str = None, print_logs: bool = False):
+    if ARCH is None:
+        sys.exit(f"Unsupported architecture")
+
     try:
         docker_client = docker.from_env()
     except DockerException as e:

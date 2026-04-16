@@ -26,7 +26,13 @@ def get_list_of_packages():
     path = Path.cwd() / "packages.yml"
     contents = path.read_text(encoding="utf-8")
     parsed = yaml.load(contents, Loader=yaml.Loader)
-    return parsed["packages"]
+    pkgs = []
+    for package in parsed["packages"]:
+        if isinstance(package, dict):
+            pkgs.append(package)
+        elif isinstance(package, str):
+            pkgs.append({"package": package})
+    return pkgs
 
 
 def get_package_details(package_name):

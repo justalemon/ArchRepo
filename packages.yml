@@ -30,7 +30,8 @@ packages:
       - plasma-nano
       - plasma-settings
   - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
-  - package: chirp-next # Transceiver Programmer
+  - qdmr # Programming Software for DMR Radios
+  - package: chirp-next # Programming Software for Analog Radios
     dependencies:
       - python-yattag
   - package: sdrpp-git # Software Defined Radio Front End - Stock Version

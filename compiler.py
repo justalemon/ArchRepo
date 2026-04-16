@@ -163,7 +163,7 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
     for package_info in packages:
         try:
             build_package(docker_client, image, package_info, print_logs)
-        except e:
+        except Exception as e:
             print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e})")
             input("Press enter to continue...")
 

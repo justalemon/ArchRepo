@@ -31,7 +31,7 @@ def get_list_of_packages():
         if isinstance(package, dict):
             pkgs.append(package)
         elif isinstance(package, str):
-            pkgs.append({"package": package})
+            pkgs.append({"package": package, "dependencies": []})
         else:
 
             print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "

@@ -153,6 +153,7 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
             sys.exit("Could not find archbuilder image, use --build to build it.")
 
     packages = get_package_details(package) if package else get_list_of_packages()
+    completed = []
 
     for package_info in packages:
         try:

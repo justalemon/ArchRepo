@@ -52,7 +52,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
 
     print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
 
-    packages_dir = Path.cwd() / ".repo" / package
+    packages_dir = Path.cwd() / "repo" / package
     packages_dir.mkdir(parents=True, exist_ok=True)
 
     volumes = {
@@ -62,7 +62,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
     }
 
     for dependency in dependencies:
-        dep_dir = Path.cwd() / ".repo" / dependency
+        dep_dir = Path.cwd() / "repo" / dependency
         volumes[str(dep_dir)] = {
             "bind": f"/home/builder/deps/{dependency}",
             "mode": "ro",

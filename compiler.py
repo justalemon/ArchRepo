@@ -32,6 +32,8 @@ def get_list_of_packages():
             pkgs.append(package)
         elif isinstance(package, str):
             pkgs.append({"package": package})
+        else:
+            print("Invalid package:", package, file=sys.stderr)
     return pkgs
 
 

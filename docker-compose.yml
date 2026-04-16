@@ -1,0 +1,8 @@
+services:
+  nginx:
+    image: nginx:1.29.8
+    restart: unless-stopped
+    ports:
+      - 8047:80
+    volumes:
+      - ./repo:/usr/share/nginx/html:ro

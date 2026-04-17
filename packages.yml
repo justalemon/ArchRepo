@@ -11,9 +11,9 @@ packages:
   - flxmlrpc # Dependency for fldigi
 
   # Explicit Packages
-  - paru
-  - brave-bin
-  - tidal-hifi-bin
+  - paru # AUR Helper written in Rust
+  - brave-bin # Brave Browser, Binary Version
+  - tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
   - pacvis-git # Visualizer of pacman packages
   - qdirstat # Disk usage utility
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile

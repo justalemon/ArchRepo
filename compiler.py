@@ -129,6 +129,12 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
 
 
 def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
+    try:
+        docker_client.containers.get("archbuilder-repobuilder").remove(force=True)
+        print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}archbuilder-repobuilder{Style.RESET_ALL}")
+    except NotFound:
+        pass
+
     print(f"{Fore.WHITE}Building repository with {Fore.MAGENTA}{len(packages)}{Fore.WHITE} packages...{Style.RESET_ALL}")
 
     repo_dir = Path.cwd() / "repo" / ARCH

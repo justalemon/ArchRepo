@@ -9,6 +9,7 @@ packages:
   - hamradio-menus # Dependency for fldigi
   - cty # Dependency for fldigi
   - flxmlrpc # Dependency for fldigi
+  - libmirisdr5-git # Dependency for sdrpp-mirisdr-source-git
 
   # Explicit Packages
   - paru # AUR Helper written in Rust
@@ -37,6 +38,11 @@ packages:
   - package: sdrpp-headers-git # Software Defined Radio Front End - Headers for Stock Version
     dependencies:
       - sdrpp-git
+  - package: sdrpp-mirisdr-source-git
+    dependencies:
+      - sdrpp-git
+      - sdrpp-headers-git
+      - libmirisdr5-git
   - package: sdrpp-brown-git # Software Defined Radio Front End - Brown Version
     dependencies:
       - airspyhf-git

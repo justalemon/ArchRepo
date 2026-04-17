@@ -142,14 +142,17 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
     repo_dir = Path.cwd() / "repo" / ARCH
 
     for package in packages:
+        print(f"{Fore.WHITE}Processing package {Fore.MAGENTA}{package}{Fore.WHITE} for repo{Style.RESET_ALL}")
         package_dir = Path.cwd() / "packages" / package
 
         for file in package_dir.glob("*.pkg.tar.zst"):
             repo_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(file, repo_dir)
+            print(f"{Fore.WHITE}Copied file {Fore.MAGENTA}{file.name}{Fore.WHITE} for package {Fore.MAGENTA}{package}{Fore.WHITE}{Style.RESET_ALL}")
         for file in package_dir.glob("*.tar.gz"):
             repo_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(file, repo_dir)
+            print(f"{Fore.WHITE}Copied file {Fore.MAGENTA}{file.name}{Fore.WHITE} for package {Fore.MAGENTA}{package}{Fore.WHITE}{Style.RESET_ALL}")
 
 
     volumes = {

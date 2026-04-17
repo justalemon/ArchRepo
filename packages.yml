@@ -13,6 +13,7 @@ packages:
   # Explicit Packages
   - paru
   - brave-bin
+  - tidal-hifi-bin
   - pacvis-git # Visualizer of pacman packages
   - qdirstat # Disk usage utility
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile

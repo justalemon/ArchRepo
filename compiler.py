@@ -1,5 +1,6 @@
 import os
 import platform
+import shutil
 import sys
 from pathlib import Path
 
@@ -127,6 +128,32 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict 
     return status_code == 0
 
 
+def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
+    print(f"{Fore.WHITE}Building repository with {Fore.MAGENTA}{len(packages)}{Fore.WHITE} packages...{Style.RESET_ALL}")
+
+    repo_dir = Path.cwd() / "repo" / ARCH
+
+    for package in packages:
+        package_dir = Path.cwd() / "packages" / package
+
+        for file in package_dir.glob("*.pkg.tar.zst"):
+            repo_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(file, repo_dir)
+        for file in package_dir.glob("*.tar.gz"):
+            repo_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(file, repo_dir)
+
+
+    volumes = {
+        str(repo_dir): {
+            "bind": "/home/builder/repo",
+        },
+    }
+
+    container = docker_client.containers.run(image, f"/home/builder/repo.sh lemon",
+                                             name="archbuilder-repobuilder", volumes=volumes)
+
+
 def main(build: bool = False, package: str = None, print_logs: bool = False):
     if ARCH is None:
         sys.exit(f"Unsupported architecture")
@@ -158,6 +185,8 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
         except Exception as e:
             print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e})")
             input("Press enter to continue...")
+
+    build_repo(docker_client, image, completed)
 
 
 if __name__ == "__main__":

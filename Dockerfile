@@ -5,5 +5,6 @@ RUN useradd -m builder && passwd -d builder && echo "builder ALL=(root) NOPASSWD
 
 WORKDIR /home/builder
 COPY scripts/build.sh /home/builder
+COPY scripts/repo.sh /home/builder
 
 USER builder

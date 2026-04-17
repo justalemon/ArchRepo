@@ -14,6 +14,7 @@ packages:
   - paru # AUR Helper written in Rust
   - brave-bin # Brave Browser, Binary Version
   - tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
+  - discord-canary # Canary/Dev version of Discord
   - pacvis-git # Visualizer of pacman packages
   - qdirstat # Disk usage utility
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile

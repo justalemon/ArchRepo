@@ -163,7 +163,8 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
     return status_code == 0
 
 
-def main(build: bool = False, package: str = None, print_logs: bool = False):
+def main(build_docker: bool = False, build_packages: bool = False, package: str = None, print_logs: bool = False,
+         create_repo: bool = False):
     if ARCH is None:
         sys.exit(f"Unsupported architecture")
 
@@ -172,7 +173,7 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
     except DockerException as e:
         sys.exit(f"Unable to connect to Docker: {e}")
 
-    if build:
+    if build_docker:
         print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder{Fore.WHITE}, please wait...{Style.RESET_ALL}")
         image, _ = docker_client.images.build(path=str(Path.cwd()), tag="archbuilder", rm=True, nocache=True)
     else:
@@ -185,17 +186,21 @@ def main(build: bool = False, package: str = None, print_logs: bool = False):
     packages = get_specific_package(package) if package else get_list_of_packages()
     completed = []
 
-    for package_info in packages:
-        try:
-            success = build_package(docker_client, image, package_info, print_logs)
+    if build_packages:
+        for package_info in packages:
+            try:
+                success = build_package(docker_client, image, package_info, print_logs)
 
-            if success:
-                completed.append(package_info["package"])
-        except Exception as e:
-            print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e})")
-            input("Press enter to continue...")
+                if success:
+                    completed.append(package_info["package"])
+            except Exception as e:
+                print(f"{Fore.RED}Oh No! Docker has crashed!{Style.RESET_ALL} ({e})")
+                input("Press enter to continue...")
+    else:
+        completed = [x["package"] for x in packages]
 
-    build_repo(docker_client, image, completed)
+    if create_repo:
+        build_repo(docker_client, image, completed)
 
 
 if __name__ == "__main__":

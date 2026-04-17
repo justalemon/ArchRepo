@@ -157,7 +157,10 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
     }
 
     container = docker_client.containers.run(image, f"/home/builder/repo.sh lemon",
-                                             name="archbuilder-repobuilder", volumes=volumes)
+                                             name="archbuilder-repobuilder", detach=True, volumes=volumes)
+    waited = container.wait()
+    status_code = waited["StatusCode"]
+    return status_code == 0
 
 
 def main(build: bool = False, package: str = None, print_logs: bool = False):

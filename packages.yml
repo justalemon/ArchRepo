@@ -15,6 +15,7 @@ packages:
   - brave-bin # Brave Browser, Binary Version
   - tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
   - discord-canary # Canary/Dev version of Discord
+  - visual-studio-code-bin # Binary version of VS Code
   - pacvis-git # Visualizer of pacman packages
   - qdirstat # Disk usage utility
   - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile

@@ -58,6 +58,7 @@ packages:
     dependencies:
       - python-sounddevice
   - direwolf # TNC/APRS Software for Amateur Radio
+  - graywolf-aprs # APRS radio transceiver, digipeater, and Internet gateway
   - package: fldigi # Digital tools for Amateur Radio
     dependencies:
       - cty

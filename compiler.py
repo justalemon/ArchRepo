@@ -31,14 +31,11 @@ def get_list_of_packages():
     parsed = yaml.load(contents, Loader=yaml.Loader)
     pkgs = []
     for package in parsed["packages"]:
-        if isinstance(package, dict):
-            pkgs.append(package)
-        elif isinstance(package, str):
-            pkgs.append({"package": package, "dependencies": []})
-        else:
-
+        if not isinstance(package, dict):
             print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "
-                  f"because its not a dict or string{Style.RESET_ALL}")
+                  f"because its not a dict{Style.RESET_ALL}")
+        pkgs.append(package)
+
     return pkgs
 
 

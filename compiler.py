@@ -34,6 +34,11 @@ def get_list_of_packages():
         if not isinstance(package, dict):
             print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "
                   f"because its not a dict{Style.RESET_ALL}")
+
+        if "package" not in package:
+            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "
+                  f"because it does not specify a package name{Style.RESET_ALL}")
+
         pkgs.append(package)
 
     return pkgs

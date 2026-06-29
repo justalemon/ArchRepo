@@ -1,33 +1,33 @@
 packages:
   # Dependencies
-  - python-yattag # Dependency for chirp-next
-  - airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
-  - libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
-  - qt5-websockets # Dependency for wsjtx-improved and sdrangel-git
-  - python-torchaudio # Dependency for freedv-gui
-  - python-sounddevice # Dependency for freedata-server
-  - hamradio-menus # Dependency for fldigi
-  - cty # Dependency for fldigi
-  - flxmlrpc # Dependency for fldigi
-  - libmirisdr5-git # Dependency for sdrpp-mirisdr-source-git
+  - package: python-yattag # Dependency for chirp-next
+  - package: airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
+  - package: libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
+  - package: qt5-websockets # Dependency for wsjtx-improved and sdrangel-git
+  - package: python-torchaudio # Dependency for freedv-gui
+  - package: python-sounddevice # Dependency for freedata-server
+  - package: hamradio-menus # Dependency for fldigi
+  - package: cty # Dependency for fldigi
+  - package: flxmlrpc # Dependency for fldigi
+  - package: libmirisdr5-git # Dependency for sdrpp-mirisdr-source-git
 
   # Explicit Packages
-  - paru # AUR Helper written in Rust
-  - brave-bin # Brave Browser, Binary Version
-  - tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
-  - discord-canary # Canary/Dev version of Discord
-  - visual-studio-code-bin # Binary version of VS Code
-  - pacvis-git # Visualizer of pacman packages
-  - qdirstat # Disk usage utility
-  - plasma-nano # Minimal KDE Plasma shell for Plasma Mobile
-  - plasma-settings # KDE Plasma Mobile Settings
-  - plasma-mobile-sounds # Sounds for Plasma Mobile
+  - package: paru # AUR Helper written in Rust
+  - package: brave-bin # Brave Browser, Binary Version
+  - package: tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
+  - package: discord-canary # Canary/Dev version of Discord
+  - package: visual-studio-code-bin # Binary version of VS Code
+  - package: pacvis-git # Visualizer of pacman packages
+  - package: qdirstat # Disk usage utility
+  - package: plasma-nano # Minimal KDE Plasma shell for Plasma Mobile
+  - package: plasma-settings # KDE Plasma Mobile Settings
+  - package: plasma-mobile-sounds # Sounds for Plasma Mobile
   - package: plasma-mobile # Plasma Mobile itself
     dependencies:
       - plasma-nano
       - plasma-settings
-  - gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
-  - qdmr # Programming Software for DMR Radios
+  - package: gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
+  - package: qdmr # Programming Software for DMR Radios
   - package: chirp-next # Programming Software for Analog Radios
     dependencies:
       - python-yattag
@@ -50,18 +50,18 @@ packages:
   - package: wsjtx-improved # Tools for using JT9 and JT65 for Amateur Radio
     dependencies:
       - qt5-websockets
-  - js8call # Tools for using JS8 for Amateur Radio
+  - package: js8call # Tools for using JS8 for Amateur Radio
   - package: freedv-gui # Tools for using Digital Audio in HF for Amateur Radio
     dependencies:
       - python-torchaudio
   - package: freedata-server # Tools for HF Communication for Amateur Radio
     dependencies:
       - python-sounddevice
-  - direwolf # TNC/APRS Software for Amateur Radio
-  - graywolf-aprs # APRS radio transceiver, digipeater, and Internet gateway
+  - package: direwolf # TNC/APRS Software for Amateur Radio
+  - package: graywolf-aprs # APRS radio transceiver, digipeater, and Internet gateway
   - package: fldigi # Digital tools for Amateur Radio
     dependencies:
       - cty
       - flxmlrpc
       - hamradio-menus
-  - gridtracker2 # Multi Tool App for Amateur Radio
+  - package: gridtracker2 # Multi Tool App for Amateur Radio

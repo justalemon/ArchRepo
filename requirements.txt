@@ -1,4 +1,4 @@
 typer==0.26.8
 pyyaml==6.0.3
-docker==7.1.0
+docker==7.2.0
 colorama==0.4.6

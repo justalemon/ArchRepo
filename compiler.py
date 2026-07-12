@@ -13,6 +13,7 @@ from colorama import Fore, Style
 from docker import DockerClient
 from docker.models.images import Image
 from docker.errors import ImageNotFound, APIError, NotFound, DockerException
+from pick import pick
 
 
 def get_architecture():
@@ -170,8 +171,8 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
     return status_code == 0
 
 
-def main(build_docker: bool = False, build_packages: bool = False, package: str = None, print_logs: bool = False,
-         create_repo: bool = False):
+def main(interactive: bool = False, build_docker: bool = False, build_packages: bool = False, package: str = None,
+         print_logs: bool = False, create_repo: bool = False):
     if ARCH is None:
         sys.exit(f"Unsupported architecture")
 
@@ -179,6 +180,37 @@ def main(build_docker: bool = False, build_packages: bool = False, package: str 
         docker_client = docker.from_env()
     except DockerException as e:
         sys.exit(f"Unable to connect to Docker: {e}")
+
+    all_packages = get_list_of_packages()
+    packages = []
+
+    if interactive:
+        picks = pick(["Build Docker Image", "Build Specific Package(s)", "Build ALL Packages", "Build Arch Repo"],
+                            "Lemon's Arch Repository Builder", multiselect=True, min_selection_count=1)
+        for _, index in picks:
+            match index:
+                case 0:
+                    build_docker = True
+                case 1:
+                    pkgs = pick(list(x["package"] for x in all_packages), "Select packages to compile", multiselect=True,
+                                min_selection_count=1)
+                    explicit = [x[0] for x in pkgs]
+                    implicit_deps = list(x["dependencies"] for x in all_packages if "dependencies" in x and x["package"] in explicit)
+                    implicit = list(i for s in implicit_deps for i in s)
+
+                    for pkg in all_packages:
+                        name = pkg["package"]
+
+                        if name in explicit or name in implicit:
+                            packages.append(pkg)
+                    build_packages = True
+                case 3:
+                    packages = all_packages
+                    build_packages = True
+                case 4:
+                    create_repo = True
+                case 5:
+                    sys.exit(0)
 
     if build_docker:
         print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder{Fore.WHITE}, please wait...{Style.RESET_ALL}")
@@ -190,7 +222,6 @@ def main(build_docker: bool = False, build_packages: bool = False, package: str 
         except ImageNotFound:
             sys.exit("Could not find archbuilder image, use --build to build it.")
 
-    packages = get_specific_package(package) if package else get_list_of_packages()
     completed = []
 
     if build_packages:

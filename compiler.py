@@ -59,9 +59,9 @@ def get_specific_package(package_name):
     return matched
 
 
-def build_package(docker_client: DockerClient, image: Image, package_info: dict | str, print_logs: bool = True):
+def build_package(docker_client: DockerClient, image: Image, package_info: dict, print_logs: bool = True):
     package = package_info["package"]
-    dependencies = package_info["dependencies"]
+    dependencies = package_info.get("dependencies", [])
 
     print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
 

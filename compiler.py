@@ -39,6 +39,9 @@ def get_list_of_packages():
         if "package" not in package:
             print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package}{Fore.WHITE} "
                   f"because it does not specify a package name{Style.RESET_ALL}")
+        if "commit" not in package:
+            print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Ignoring package {Fore.MAGENTA}{package['package']}{Fore.WHITE} "
+                  f"because it does not specify a commit{Style.RESET_ALL}")
 
         pkgs.append(package)
 

@@ -209,7 +209,7 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
                             packages.append(pkg)
                     build_packages = True
                 case 2:
-                    packages = all_packages
+                    packages = [x for x in all_packages if not x.get("skip", False)]
                     build_packages = True
                 case 3:
                     create_repo = True

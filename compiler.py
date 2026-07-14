@@ -179,7 +179,7 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str], a
 def main(interactive: Annotated[bool, Option(help="Interactively asks for input. Ignores all other options.")] = False,
          build_docker: Annotated[bool, Option(help="Build a new Docker image for the chosen architecture.")] = False,
          build_packages: Annotated[bool, Option(help="Builds all packages from the index.")] = False,
-         package: Annotated[str, Option(help="The single package to compile.")] = None,
+         package: Annotated[list[str], Option(help="The specific packages to compile.")] = None,
          print_logs: Annotated[bool, Option(help="Prints the Docker output to the console.")] = False,
          create_repo: Annotated[bool, Option(help="Creates and/or Updates the Arch repo index.")] = False,
          arch: Annotated[str, Option(help="The Architecture to compile the packages against.")] = "amd64"):

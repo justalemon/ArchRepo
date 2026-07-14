@@ -86,8 +86,10 @@ packages:
     commit: bad067611eda30516d69fdd8fb9cf471dbbbefed
   - package: graywolf-aprs # APRS radio transceiver, digipeater, and Internet gateway
     commit: 402f5206c40825bfcc8f39ced5bb833f43ae2606
+    skip: true
   - package: fldigi # Digital tools for Amateur Radio
     commit: 73ed497478d5198d8a1d19539922583ec83e7ee5
+    skip: true
     dependencies:
       - cty
       - flxmlrpc

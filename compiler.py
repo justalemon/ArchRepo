@@ -3,16 +3,16 @@
 import shutil
 import sys
 from pathlib import Path
+from typing import Annotated
 
 import docker
-import typer
 import yaml
 from colorama import Fore, Style
 from docker import DockerClient
 from docker.models.images import Image
 from docker.errors import ImageNotFound, APIError, NotFound, DockerException
 from pick import pick
-
+from typer import Option, run
 
 IMAGES = {
     "amd64": "archlinux:latest",
@@ -176,8 +176,13 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str], a
     return status_code == 0
 
 
-def main(interactive: bool = False, build_docker: bool = False, build_packages: bool = False, package: str = None,
-         print_logs: bool = False, create_repo: bool = False, arch: str = "amd64"):
+def main(interactive: Annotated[bool, Option(help="Interactively asks for input. Ignores all other options.")] = False,
+         build_docker: Annotated[bool, Option(help="Build a new Docker image for the chosen architecture.")] = False,
+         build_packages: Annotated[bool, Option(help="Builds all packages from the index.")] = False,
+         package: Annotated[str, Option(help="The single package to compile.")] = None,
+         print_logs: Annotated[bool, Option(help="Prints the Docker output to the console.")] = False,
+         create_repo: Annotated[bool, Option(help="Creates and/or Updates the Arch repo index.")] = False,
+         arch: Annotated[str, Option(help="The Architecture to compile the packages against.")] = "amd64"):
     if arch not in IMAGES:
         sys.exit(f"Unsupported architecture")
 
@@ -251,4 +256,4 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    run(main)

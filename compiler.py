@@ -188,7 +188,7 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
     packages = []
 
     if interactive:
-        picks = pick(["Build Docker Image", "Build Specific Package(s)", "Build ALL Packages", "Build Arch Repo"],
+        picks = pick(["Build Docker Image", "Build Specific Package(s)", "Build ALL Packages", "Build Arch Repo", "Exit"],
                             "Lemon's Arch Repository Builder", multiselect=True, min_selection_count=1)
         for _, index in picks:
             match index:
@@ -207,12 +207,12 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
                         if name in explicit or name in implicit:
                             packages.append(pkg)
                     build_packages = True
-                case 3:
+                case 2:
                     packages = all_packages
                     build_packages = True
-                case 4:
+                case 3:
                     create_repo = True
-                case 5:
+                case 4:
                     sys.exit(0)
 
     if build_docker:

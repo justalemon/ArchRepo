@@ -56,7 +56,7 @@ packages:
     dependencies:
       - sdrpp-git
   - package: sdrpp-mirisdr-source-git
-    commit: 9305ef3147c423f7b9f217923cd36ef38c00c059
+    commit: c47921bdda91a67bf34f11ba92abc24f5f89e1c6
     dependencies:
       - sdrpp-git
       - sdrpp-headers-git

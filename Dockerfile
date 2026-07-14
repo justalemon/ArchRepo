@@ -1,4 +1,6 @@
-FROM archlinux:latest
+ARG BASE_IMAGE=archlinux:latest
+
+FROM ${BASE_IMAGE}
 
 RUN sed -i "s/^#DisableSandboxFilesystem/DisableSandbox\n#DisableSandboxFilesystem/" /etc/pacman.conf
 RUN pacman -Syu --noconfirm base-devel sudo git

@@ -92,7 +92,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
     try:
         docker_client.containers.get(name).remove(force=True)
         print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}{name}{Fore.WHITE}"
-              f" for package {Fore.MAGENTA}{package_info}{Fore.WHITE}{Style.RESET_ALL}")
+              f" for package {Fore.MAGENTA}{package}{Fore.WHITE}{Style.RESET_ALL}")
     except NotFound:
         pass
 

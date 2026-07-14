@@ -20,6 +20,8 @@ packages:
     commit: 3b5276050b905837903ff82eae7a054947bec877
   - package: libmirisdr5-git # Dependency for sdrpp-mirisdr-source-git
     commit: 3e6847983100c29dd2cc3fdeaae54bcef23e0423
+  - package: electron35-bin
+    commit: 1fda5d4d007a15c009e82f12b34c2f3874f194d6
 
   # Explicit Packages
   - package: paru # AUR Helper written in Rust
@@ -92,3 +94,5 @@ packages:
       - hamradio-menus
   - package: gridtracker2 # Multi Tool App for Amateur Radio
     commit: 9c8bcc7ce1e25e1bd8208f35bf0f634105d0f2bb
+    dependencies:
+      - electron35-bin

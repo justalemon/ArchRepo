@@ -36,17 +36,8 @@ packages:
     commit: 0481e0c744ead3a6fc4ea474a88f60cf91865b4e
   - package: qdirstat # Disk usage utility
     commit: 7fec4c52e23faa3cd9e80e38ed0d5deb30246524
-  - package: plasma-nano # Minimal KDE Plasma shell for Plasma Mobile
-    commit: 9efc8ba38301f8231aa930772d7c5f367fe91c06
-  - package: plasma-settings # KDE Plasma Mobile Settings
-    commit: cbe335ac35c7fa01fc680bda244be64f6b60872d
   - package: plasma-mobile-sounds # Sounds for Plasma Mobile
     commit: d0232432dd3c3b25365c67c8764a99fc9749630d
-  - package: plasma-mobile # Plasma Mobile itself
-    commit: d3c0b5cbdcdccf8bbe4af1c6329861c2ad0f26c3
-    dependencies:
-      - plasma-nano
-      - plasma-settings
   - package: gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
     commit: c5f78baefcd15e7db4be9173dccbcd536111e5b8
   - package: qdmr # Programming Software for DMR Radios

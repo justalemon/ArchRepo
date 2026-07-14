@@ -18,5 +18,6 @@ cd build || exit 1
 git checkout "$commit"
 makepkg -sf --noconfirm
 mkdir ~/pkg || true
+rm -rf ~/pkg/*
 cp -v *.pkg.tar.zst ~/pkg
 cp -v *.tar.gz ~/pkg || true

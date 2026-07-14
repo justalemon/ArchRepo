@@ -3,6 +3,8 @@ set -e
 
 package=$1
 shift
+commit=$1
+shift
 
 sudo pacman -Syu --noconfirm
 
@@ -13,6 +15,7 @@ done
 rm -rf build
 git clone "https://aur.archlinux.org/$package.git" build
 cd build || exit 1
+git checkout "$commit"
 makepkg -sf --noconfirm
 mkdir ~/pkg || true
 cp -v *.pkg.tar.zst ~/pkg

@@ -66,6 +66,7 @@ def get_specific_package(package_name):
 def build_package(docker_client: DockerClient, image: Image, package_info: dict, print_logs: bool = True):
     package = package_info["package"]
     dependencies = package_info.get("dependencies", [])
+    commit = package_info["commit"]
 
     print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
 
@@ -85,7 +86,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
             "mode": "ro",
         }
 
-    params = f"{package} {' '.join(dependencies)}"
+    params = f"{package} {commit} {' '.join(dependencies)}"
     name = f"archbuilder-{package}"
 
     try:
@@ -223,7 +224,7 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
             image = docker_client.images.get("archbuilder")
             print(f"{Fore.WHITE}Using existing {Fore.MAGENTA}archbuilder{Fore.WHITE} image{Style.RESET_ALL}")
         except ImageNotFound:
-            sys.exit("Could not find archbuilder image, use --build to build it.")
+            sys.exit("Could not find archbuilder image. Please build the image or disable Resource Saver Mode if active.")
 
     completed = []
 

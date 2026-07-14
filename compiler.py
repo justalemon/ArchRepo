@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import os
-import platform
 import shutil
 import sys
 from pathlib import Path
@@ -16,14 +14,16 @@ from docker.errors import ImageNotFound, APIError, NotFound, DockerException
 from pick import pick
 
 
-def get_architecture():
-    if hasattr(os, "uname"):
-        return os.uname().machine
-    else:
-        return "x86_64" if platform.uname().machine == "AMD64" else None
-
-
-ARCH = get_architecture()
+IMAGES = {
+    "amd64": "archlinux:latest",
+    "arm64": "menci/archlinuxarm:latest",
+    "arm": "menci/archlinuxarm:latest"
+}
+PACMAN_ARCH = {
+    "amd64": "x86_64",
+    "arm64": "aarch64",
+    "arm": "armv7h"
+}
 
 
 def get_list_of_packages():
@@ -63,14 +63,15 @@ def get_specific_package(package_name):
     return matched
 
 
-def build_package(docker_client: DockerClient, image: Image, package_info: dict, print_logs: bool = True):
+def build_package(docker_client: DockerClient, image: Image, package_info: dict, arch: str, print_logs: bool = True):
     package = package_info["package"]
     dependencies = package_info.get("dependencies", [])
     commit = package_info["commit"]
 
-    print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE}...{Style.RESET_ALL}")
+    print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE} for architecture "
+          f"{Fore.MAGENTA}{arch}{Fore.WHITE}...{Style.RESET_ALL}")
 
-    packages_dir = Path.cwd() / "packages" / package
+    packages_dir = Path.cwd() / "packages" / arch / package
     packages_dir.mkdir(parents=True, exist_ok=True)
 
     volumes = {
@@ -80,7 +81,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
     }
 
     for dependency in dependencies:
-        dep_dir = Path.cwd() / "packages" / dependency
+        dep_dir = Path.cwd() / "packages" / arch / dependency
         volumes[str(dep_dir)] = {
             "bind": f"/home/builder/deps/{dependency}",
             "mode": "ro",
@@ -98,7 +99,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
 
     try:
         container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
-                                                 name=name, detach=True, volumes=volumes)
+                                                 name=name, platform=f"linux/{arch}", detach=True, volumes=volumes)
     except APIError as e:
         print(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
         return False
@@ -137,7 +138,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
     return status_code == 0
 
 
-def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
+def build_repo(docker_client: DockerClient, image: Image, packages: list[str], arch: str):
     try:
         docker_client.containers.get("archbuilder-repobuilder").remove(force=True)
         print(f"{Fore.YELLOW}Warning{Fore.WHITE}: Deleted existing container {Fore.BLUE}archbuilder-repobuilder{Style.RESET_ALL}")
@@ -146,13 +147,13 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
 
     print(f"{Fore.WHITE}Building repository with {Fore.MAGENTA}{len(packages)}{Fore.WHITE} packages...{Style.RESET_ALL}")
 
-    repo_dir = Path.cwd() / "repo" / ARCH
+    repo_dir = Path.cwd() / "repo" / PACMAN_ARCH[arch]
 
     for package in packages:
         print(f"{Fore.WHITE}Processing package {Fore.MAGENTA}{package}{Fore.WHITE} for repo{Style.RESET_ALL}")
-        package_dir = Path.cwd() / "packages" / package
+        package_dir = Path.cwd() / "packages" / arch / package
 
-        for file in package_dir.glob("*.pkg.tar.zst"):
+        for file in package_dir.glob("*.pkg.tar.*"):
             repo_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(file, repo_dir)
             print(f"{Fore.WHITE}Copied file {Fore.MAGENTA}{file.name}{Fore.WHITE} for package {Fore.MAGENTA}{package}{Fore.WHITE}{Style.RESET_ALL}")
@@ -168,16 +169,16 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str]):
         },
     }
 
-    container = docker_client.containers.run(image, f"/home/builder/repo.sh lemon",
-                                             name="archbuilder-repobuilder", detach=True, volumes=volumes)
+    container = docker_client.containers.run(image, f"/home/builder/repo.sh lemon", name="archbuilder-repobuilder",
+                                             platform=f"linux/{arch}", detach=True, volumes=volumes)
     waited = container.wait()
     status_code = waited["StatusCode"]
     return status_code == 0
 
 
 def main(interactive: bool = False, build_docker: bool = False, build_packages: bool = False, package: str = None,
-         print_logs: bool = False, create_repo: bool = False):
-    if ARCH is None:
+         print_logs: bool = False, create_repo: bool = False, arch: str = "amd64"):
+    if arch not in IMAGES:
         sys.exit(f"Unsupported architecture")
 
     try:
@@ -189,13 +190,16 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
     packages = []
 
     if interactive:
-        picks = pick(["Build Docker Image", "Build Specific Package(s)", "Build ALL Packages", "Build Arch Repo", "Exit"],
+        picks = pick([f"Switch Architecture (current: {arch})", "Build Docker Image", "Build Specific Package(s)",
+                      "Build ALL Packages", "Build Arch Repo", "Exit"],
                             "Lemon's Arch Repository Builder", multiselect=True, min_selection_count=1)
         for _, index in picks:
             match index:
                 case 0:
-                    build_docker = True
+                    arch, _ = pick(list(IMAGES.keys()), "Select the target Architecture")
                 case 1:
+                    build_docker = True
+                case 2:
                     pkgs = pick(list(x["package"] for x in all_packages), "Select packages to compile", multiselect=True,
                                 min_selection_count=1)
                     explicit = [x[0] for x in pkgs]
@@ -208,30 +212,31 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
                         if name in explicit or name in implicit:
                             packages.append(pkg)
                     build_packages = True
-                case 2:
+                case 3:
                     packages = [x for x in all_packages if not x.get("skip", False)]
                     build_packages = True
-                case 3:
-                    create_repo = True
                 case 4:
+                    create_repo = True
+                case 5:
                     sys.exit(0)
 
     if build_docker:
-        print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder{Fore.WHITE}, please wait...{Style.RESET_ALL}")
-        image, _ = docker_client.images.build(path=str(Path.cwd()), tag="archbuilder", rm=True, nocache=True)
+        print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder:{arch}{Fore.WHITE}, please wait...{Style.RESET_ALL}")
+        image, _ = docker_client.images.build(path=str(Path.cwd()), platform=f"linux/{arch}", tag=f"archbuilder:{arch}",
+                                              rm=True, nocache=True, buildargs={"BASE_IMAGE": IMAGES[arch]})
     else:
         try:
-            image = docker_client.images.get("archbuilder")
-            print(f"{Fore.WHITE}Using existing {Fore.MAGENTA}archbuilder{Fore.WHITE} image{Style.RESET_ALL}")
+            image = docker_client.images.get(f"archbuilder:{arch}")
+            print(f"{Fore.WHITE}Using existing {Fore.MAGENTA}archbuilder:{arch}{Fore.WHITE} image{Style.RESET_ALL}")
         except ImageNotFound:
-            sys.exit("Could not find archbuilder image. Please build the image or disable Resource Saver Mode if active.")
+            sys.exit(f"Could not find archbuilder:{arch} image. Please build the image or disable Resource Saver Mode if active.")
 
     completed = []
 
     if build_packages:
         for package_info in packages:
             try:
-                success = build_package(docker_client, image, package_info, print_logs)
+                success = build_package(docker_client, image, package_info, arch, print_logs)
 
                 if success:
                     completed.append(package_info["package"])
@@ -242,7 +247,7 @@ def main(interactive: bool = False, build_docker: bool = False, build_packages: 
         completed = [x["package"] for x in packages]
 
     if create_repo:
-        build_repo(docker_client, image, completed)
+        build_repo(docker_client, image, completed, arch)
 
 
 if __name__ == "__main__":

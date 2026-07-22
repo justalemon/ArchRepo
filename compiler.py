@@ -67,6 +67,7 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
     package = package_info["package"]
     dependencies = package_info.get("dependencies", [])
     commit = package_info["commit"]
+    env = package_info.get("env", {})
 
     print(f"{Fore.WHITE}Building package {Fore.MAGENTA}{package}{Fore.WHITE} for architecture "
           f"{Fore.MAGENTA}{arch}{Fore.WHITE}...{Style.RESET_ALL}")
@@ -99,7 +100,8 @@ def build_package(docker_client: DockerClient, image: Image, package_info: dict,
 
     try:
         container = docker_client.containers.run(image, f"/home/builder/build.sh {params}",
-                                                 name=name, platform=f"linux/{arch}", detach=True, volumes=volumes)
+                                                 name=name, platform=f"linux/{arch}", detach=True, volumes=volumes,
+                                                 environment=env)
     except APIError as e:
         print(f"{Fore.WHITE}Unable to build {Fore.RED}{package}{Fore.WHITE} due to an API error\n{e}")
         return False

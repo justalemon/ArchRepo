@@ -24,6 +24,8 @@ packages:
     commit: 1fda5d4d007a15c009e82f12b34c2f3874f194d6
 
   # Explicit Packages
+  - package: vacuumtube
+    commit: 9dc60a8a86247350e80a8b5fb99c05b73307a0b8
   - package: paru # AUR Helper written in Rust
     commit: 329be2113c590046cb29858c23d9b96a8d7bd586
   - package: brave-bin # Brave Browser, Binary Version

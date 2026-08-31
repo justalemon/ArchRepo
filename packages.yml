@@ -1,61 +1,58 @@
 packages:
-  # Dependencies
-  - package: python-yattag # Dependency for chirp-next
+  - package: python-yattag
     commit: 7b1d36f1ebb07aac109229d5a8880c45c2c51dc8
-  - package: airspyhf-git # Dependency for sdrpp-git and sdrpp-brown-git
+  - package: airspyhf-git
     commit: 39b56fd60b7b5ab4a893c3d855c54c1abba7baa4
-  - package: libsdrplay # Dependency for sdrpp-git and sdrpp-brown-git
+  - package: libsdrplay
     commit: 3add3bf3616208ec807866672b7876e0d7a4dcc9
-  - package: qt5-websockets # Dependency for wsjtx-improved and sdrangel-git
+  - package: qt5-websockets
     commit: 5d1816fa8a45120e25d4f5b1e9a0b3b169c84c63
-  - package: python-torchaudio # Dependency for freedv-gui
+  - package: python-torchaudio
     commit: 254a24dbdc8ce4a752322a156d4298a166ac6f36
-  - package: python-sounddevice # Dependency for freedata-server
+  - package: python-sounddevice
     commit: c3a5320f95ada9ccebd629b5722276e645388ced
-  - package: hamradio-menus # Dependency for fldigi
+  - package: hamradio-menus
     commit: eba3a18df2a2ae690b7486671a188ccb7d692188
-  - package: cty # Dependency for fldigi
+  - package: cty
     commit: b1adaad97c5d203ebf6a5ade9320b9fc454a69aa
-  - package: flxmlrpc # Dependency for fldigi
+  - package: flxmlrpc
     commit: 3b5276050b905837903ff82eae7a054947bec877
-  - package: libmirisdr5-git # Dependency for sdrpp-mirisdr-source-git
+  - package: libmirisdr5-git
     commit: 3e6847983100c29dd2cc3fdeaae54bcef23e0423
   - package: electron35-bin
     commit: 1fda5d4d007a15c009e82f12b34c2f3874f194d6
-
-  # Explicit Packages
   - package: vacuumtube
     commit: 4bfc7a864f1ae3f3a8fbaf0dfc1ee0dc55655966
-  - package: paru # AUR Helper written in Rust
+  - package: paru
     commit: 329be2113c590046cb29858c23d9b96a8d7bd586
-  - package: brave-bin # Brave Browser, Binary Version
+  - package: brave-bin
     commit: 7b85edf5694c59dd523fabfdec2cedbd525b5e37
-  - package: tidal-hifi-bin # Tidal with Widevine support for HIFI Audio
+  - package: tidal-hifi-bin
     commit: 0906b7b8eed51d2e1ecfb8620c5ee34c73cb79d4
-  - package: discord-canary # Canary/Dev version of Discord
+  - package: discord-canary
     commit: 9a4081de4ba376c24640d14c3a92883b7c0f3574
-  - package: visual-studio-code-bin # Binary version of VS Code
+  - package: visual-studio-code-bin
     commit: 69b361eca02a84aa97c43c885e23d463eec96770
-  - package: pacvis-git # Visualizer of pacman packages
+  - package: pacvis-git
     commit: 0481e0c744ead3a6fc4ea474a88f60cf91865b4e
-  - package: qdirstat # Disk usage utility
+  - package: qdirstat
     commit: 7fec4c52e23faa3cd9e80e38ed0d5deb30246524
-  - package: plasma-mobile-sounds # Sounds for Plasma Mobile
+  - package: plasma-mobile-sounds
     commit: d0232432dd3c3b25365c67c8764a99fc9749630d
-  - package: gsl-firmware-git # Silead Touchscreen Firmware for the silead kernel module
+  - package: gsl-firmware-git
     commit: c5f78baefcd15e7db4be9173dccbcd536111e5b8
-  - package: qdmr # Programming Software for DMR Radios
+  - package: qdmr
     commit: fe99182c3d4391807739fa8df8e953ef5fa64bfc
-  - package: chirp-next # Programming Software for Analog Radios
+  - package: chirp-next
     commit: b5c0b9842e538c4bc5bf09057a555bb90fe11699
     dependencies:
       - python-yattag
-  - package: sdrpp-git # Software Defined Radio Front End - Stock Version
+  - package: sdrpp-git
     commit: 2243d1f92d43e3d0085f955a49e3611f9ad36d72
     dependencies:
       - airspyhf-git
       - libsdrplay
-  - package: sdrpp-headers-git # Software Defined Radio Front End - Headers for Stock Version
+  - package: sdrpp-headers-git
     commit: a74aba2f786fc5c87cc2d3025b1363bb88fb69e1
     dependencies:
       - sdrpp-git
@@ -65,38 +62,38 @@ packages:
       - sdrpp-git
       - sdrpp-headers-git
       - libmirisdr5-git
-  - package: sdrpp-brown-git # Software Defined Radio Front End - Brown Version
+  - package: sdrpp-brown-git
     commit: 5da9425797fedeeb2b7a014ae43cb4b41c44a37c
     dependencies:
       - airspyhf-git
       - libsdrplay
-  - package: wsjtx-improved # Tools for using JT9 and JT65 for Amateur Radio
+  - package: wsjtx-improved
     commit: 17e5e0f022db0ea6b78a8bf6e377d1d1daaa6f47
     dependencies:
       - qt5-websockets
-  - package: js8call # Tools for using JS8 for Amateur Radio
+  - package: js8call
     commit: 6409f660156222fc61b280905488652c660fa0aa
-  - package: freedv-gui # Tools for using Digital Audio in HF for Amateur Radio
+  - package: freedv-gui
     commit: ebe29c1f7599a6378ba285671db7d4da617656de
     dependencies:
       - python-torchaudio
-  - package: freedata-server # Tools for HF Communication for Amateur Radio
+  - package: freedata-server
     commit: 77018ed6c3e5a86faefaf82aa29559c5d9ef2088
     dependencies:
       - python-sounddevice
-  - package: direwolf # TNC/APRS Software for Amateur Radio
+  - package: direwolf
     commit: bad067611eda30516d69fdd8fb9cf471dbbbefed
-  - package: graywolf-aprs # APRS radio transceiver, digipeater, and Internet gateway
+  - package: graywolf-aprs
     commit: 402f5206c40825bfcc8f39ced5bb833f43ae2606
     skip: true
-  - package: fldigi # Digital tools for Amateur Radio
+  - package: fldigi
     commit: 7b95a2455b5a01b3ab20267cf9b61e0d376bb00e
     skip: true
     dependencies:
       - cty
       - flxmlrpc
       - hamradio-menus
-  - package: gridtracker2 # Multi Tool App for Amateur Radio
+  - package: gridtracker2
     commit: a8d490fc12423e77d6dfdf99b8ba3da70f432d91
     dependencies:
       - electron35-bin

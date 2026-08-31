@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-
+import os
 import shutil
+import stat
+import subprocess
 import sys
 from pathlib import Path
 from typing import Annotated
 
+import click
 import docker
 import yaml
 from colorama import Fore, Style
@@ -178,12 +181,74 @@ def build_repo(docker_client: DockerClient, image: Image, packages: list[str], a
     return status_code == 0
 
 
+def remove_readonly(func, path, _):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
+
+def update_git_revisions(packages: list[dict]):
+    git = shutil.which("git")
+    path = Path.cwd() / ".temp"
+
+    for package in packages:
+        if path.exists():
+            shutil.rmtree(path, onexc=remove_readonly)
+
+        name = package["package"]
+        saved_hash = package["commit"]
+
+        path.mkdir(parents=True)
+
+        clone = subprocess.run([git, "clone", f"https://aur.archlinux.org/{name}.git", "."], cwd=path,
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        if clone.returncode != 0:
+            print(f"Unable to clone {name}: {clone.stdout.decode()} (Code {clone.returncode})")
+            continue
+
+        commit = subprocess.run([git, "rev-parse", "origin/master"], stdout=subprocess.PIPE, cwd=path)
+
+        if commit.returncode != 0:
+            print(f"Unable to get hash of {name}: {clone.stdout.decode()} (Code {clone.returncode})")
+            continue
+
+        upstream_hash = commit.stdout.decode().strip()
+
+        if upstream_hash == saved_hash:
+            print(f"Not updating {name}: Hash is already updated to {upstream_hash}")
+            continue
+
+        diff = subprocess.run([git, "--no-pager", "diff", saved_hash, upstream_hash], stdout=subprocess.PIPE, cwd=path)
+
+        patch = diff.stdout.decode().strip()
+        click.echo_via_pager(patch)
+
+        accept = input("Accept patch? Y/N > ").upper() == "Y"
+
+        if not accept:
+            print(f"Not updating {name}: Update {upstream_hash} not accepted")
+            continue
+
+        package["commit"] = upstream_hash
+        print(f"Updated package {name} to commit {upstream_hash}")
+
+    if path.exists():
+        shutil.rmtree(path, onexc=remove_readonly)
+
+    path = Path.cwd() / "packages.yml"
+    with path.open("w") as file:
+        yaml.dump({"packages": packages}, file, default_flow_style=False, sort_keys=False)
+
+    print("Finished updating package revisions")
+
+
 def main(interactive: Annotated[bool, Option(help="Interactively asks for input. Ignores all other options.")] = False,
          build_docker: Annotated[bool, Option(help="Build a new Docker image for the chosen architecture.")] = False,
          build_packages: Annotated[bool, Option(help="Builds all packages from the index.")] = False,
          package: Annotated[list[str], Option(help="The specific packages to compile.")] = None,
          print_logs: Annotated[bool, Option(help="Prints the Docker output to the console.")] = False,
          create_repo: Annotated[bool, Option(help="Creates and/or Updates the Arch repo index.")] = False,
+         update_revisions: Annotated[bool, Option(help="Updates the GIT revisions of the AUR packages.")] = False,
          arch: Annotated[str, Option(help="The Architecture to compile the packages against.")] = "amd64"):
     if arch not in IMAGES:
         sys.exit(f"Unsupported architecture")
@@ -197,16 +262,18 @@ def main(interactive: Annotated[bool, Option(help="Interactively asks for input.
     packages = []
 
     if interactive:
-        picks = pick([f"Switch Architecture (current: {arch})", "Build Docker Image", "Build Specific Package(s)",
-                      "Build ALL Packages", "Build Arch Repo", "Exit"],
+        picks = pick([f"Switch Architecture (current: {arch})", "Update GIT Revisions", "Build Docker Image",
+                      "Build Specific Package(s)", "Build ALL Packages", "Build Arch Repo", "Exit"],
                             "Lemon's Arch Repository Builder", multiselect=True, min_selection_count=1)
         for _, index in picks:
             match index:
                 case 0:
                     arch, _ = pick(list(IMAGES.keys()), "Select the target Architecture")
                 case 1:
-                    build_docker = True
+                    update_revisions = True
                 case 2:
+                    build_docker = True
+                case 3:
                     pkgs = pick(list(x["package"] for x in all_packages), "Select packages to compile", multiselect=True,
                                 min_selection_count=1)
                     explicit = [x[0] for x in pkgs]
@@ -219,13 +286,16 @@ def main(interactive: Annotated[bool, Option(help="Interactively asks for input.
                         if name in explicit or name in implicit:
                             packages.append(pkg)
                     build_packages = True
-                case 3:
+                case 4:
                     packages = [x for x in all_packages if not x.get("skip", False)]
                     build_packages = True
-                case 4:
-                    create_repo = True
                 case 5:
+                    create_repo = True
+                case 6:
                     sys.exit(0)
+
+    if update_revisions:
+        update_git_revisions(all_packages)
 
     if build_docker:
         print(f"{Fore.WHITE}Building docker image as {Fore.MAGENTA}archbuilder:{arch}{Fore.WHITE}, please wait...{Style.RESET_ALL}")

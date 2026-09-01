@@ -71,6 +71,8 @@ packages:
     commit: 17e5e0f022db0ea6b78a8bf6e377d1d1daaa6f47
     dependencies:
       - qt5-websockets
+  - package: wsjtx-improved-qt6
+    commit: b97c5f5c84b844bf0f5db7fc78961dd3d225ff09
   - package: js8call
     commit: 6409f660156222fc61b280905488652c660fa0aa
   - package: freedv-gui
